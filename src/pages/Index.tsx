@@ -1,0 +1,59 @@
+import { useState } from "react";
+import { RotateCcw } from "lucide-react";
+import { ChatFlow } from "@/components/chat/ChatFlow";
+
+const Index = () => {
+  const [resetKey, setResetKey] = useState(0);
+
+  return (
+    <div className="h-[100dvh] flex flex-col bg-background overflow-hidden">
+      {/* Top promo bar */}
+      <div className="shrink-0 bg-secondary text-secondary-foreground text-center text-[11px] sm:text-sm font-semibold py-1.5 sm:py-2 px-3 sm:px-4">
+        ✈️ Empowering the Next Generation of Aviation Leaders
+      </div>
+
+      {/* Sticky Header */}
+      <header className="shrink-0 z-30 bg-background/95 backdrop-blur border-b border-border">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl flex items-center justify-center text-primary-foreground shadow-bubble shrink-0 overflow-hidden">
+              <img
+                src="./src/assets/tritya_logo.png"
+                alt="Tritya Aviation Academy"
+                className="h-10 w-10 sm:h-11 sm:w-11 object-contain drop-shadow-sm"
+              />
+            </div>
+            <div className="leading-tight min-w-0">
+              <h1
+                className="font-extrabold text-sm sm:text-lg tracking-tight text-primary truncate"
+                style={{ fontFamily: "'Montserrat', Inter, sans-serif" }}
+              >
+                TRITYA AVIATION
+              </h1>
+              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wider truncate">
+                Air Hostess & Aviation Academy
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setResetKey((k) => k + 1)}
+              className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 rounded-[8px] bg-accent text-accent-foreground text-[11px] sm:text-xs font-semibold hover:bg-accent/90 transition shadow-glow"
+              aria-label="Restart conversation"
+            >
+              <RotateCcw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              Restart
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        <ChatFlow resetKey={resetKey} />
+      </main>
+    </div>
+  );
+};
+
+export default Index;
