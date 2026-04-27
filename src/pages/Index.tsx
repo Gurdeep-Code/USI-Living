@@ -5,6 +5,7 @@ import logoFull from "@/assets/logo_full.webp";
 
 const Index = () => {
   const [resetKey, setResetKey] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <div className="h-[100dvh] flex flex-col bg-background overflow-hidden">
@@ -27,7 +28,8 @@ const Index = () => {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setResetKey((k) => k + 1)}
-              className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 rounded-[8px] bg-accent text-accent-foreground text-[11px] sm:text-xs font-semibold hover:bg-accent/90 transition shadow-glow"
+              disabled={isSubmitting}
+              className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 rounded-[8px] bg-accent text-accent-foreground text-[11px] sm:text-xs font-semibold hover:bg-accent/90 transition shadow-glow disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label="Restart conversation"
             >
               <RotateCcw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
@@ -38,7 +40,10 @@ const Index = () => {
       </header>
 
       <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        <ChatFlow resetKey={resetKey} />
+        <ChatFlow
+          resetKey={resetKey}
+          onSubmittingChange={setIsSubmitting}
+        />
       </main>
     </div>
   );

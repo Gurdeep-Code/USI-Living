@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { Send } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
 import { TypingBubble } from "./TypingBubble";
@@ -33,10 +33,10 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 
 interface ChatFlowProps {
   resetKey: number;
+  onSubmittingChange?: (isSubmitting: boolean) => void;
 }
 
-export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
-  const navigate = useNavigate();
+export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [typing, setTyping] = useState(false);
   const [step, setStep] = useState<Step>("intro");
@@ -45,6 +45,42 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const runIdRef = useRef(0);
+  const leadSubmitMutation = useMutation({
+    mutationFn: async (payload: Record<string, string>) => {
+      const endpoint = import.meta.env.VITE_LEAD_ENDPOINT?.trim();
+      if (!endpoint) throw new Error("Missing VITE_LEAD_ENDPOINT");
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const body = await response.text();
+        throw new Error(
+          body || `Lead submit failed with status ${response.status}`,
+        );
+      }
+    },
+  });
+
+  const buildLeadPayload = (
+    leadData: Record<string, string>,
+    stage: "phone_capture" | "final_submit",
+  ) => ({
+    name: leadData.name ?? "",
+    phone: leadData.phone ?? "",
+    email: leadData.email ?? "",
+    pincode: leadData.pincode ?? "",
+    course: leadData.course ?? "",
+    interest: leadData.interest ?? "",
+    contactPref: leadData.contactPref ?? "",
+    page_url: window.location.href,
+    submission_stage: stage,
+  });
 
   const pushBot = (content: React.ReactNode) =>
     setMessages((m) => [...m, { id: uid(), type: "bot", content, ts: now() }]);
@@ -73,6 +109,10 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
     setInput("");
     setLead({});
   }, [resetKey]);
+
+  useEffect(() => {
+    onSubmittingChange?.(leadSubmitMutation.isPending);
+  }, [leadSubmitMutation.isPending, onSubmittingChange]);
 
   // Start intro only after the cleared state has been painted
   useEffect(() => {
@@ -155,7 +195,7 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     const val = input.trim();
-    if (!val || typing) return;
+    if (!val || typing || leadSubmitMutation.isPending) return;
     const err = validate(val);
     if (err) {
       toast({
@@ -169,7 +209,17 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
     setInput("");
 
     if (step === "askPhone") {
-      setLead((l) => ({ ...l, phone: val }));
+      const leadAfterPhone: Record<string, string> = { ...lead, phone: val };
+      setLead(leadAfterPhone);
+      const phoneCapturePayload = buildLeadPayload(
+        leadAfterPhone,
+        "phone_capture",
+      );
+      leadSubmitMutation.mutate(phoneCapturePayload, {
+        onError: (error) => {
+          console.error("Phone capture submission failed:", error);
+        },
+      });
       await botSequence([<>Your Name?</>]);
       setStep("askName");
     } else if (step === "askName") {
@@ -181,22 +231,33 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
       await botSequence([<>And finally, your Pincode?</>]);
       setStep("askPincode");
     } else if (step === "askPincode") {
-      const finalLead = { ...lead, pincode: val };
+      const finalLead: Record<string, string> = { ...lead, pincode: val };
       setLead(finalLead);
-      console.log("Final lead submission:", finalLead);
       await botSequence([
         <>🎉 Thanks for sharing your details! Redirecting…</>,
       ]);
       setStep("done");
-      try {
-        sessionStorage.setItem("tritya_lead", JSON.stringify(finalLead));
-      } catch {
-        /* ignore */
-      }
-      setTimeout(
-        () => window.location.replace("https://airhostessinstitute.com/thank-you/"),
-        500,
-      );
+
+      const payload = buildLeadPayload(finalLead, "final_submit");
+      console.log("Final lead submission:", payload);
+
+      leadSubmitMutation.mutate(payload, {
+        onSuccess: () => {
+          toast({
+            title: "Submitted successfully",
+            description: "Your details have been saved.",
+          });
+          window.location.replace("https://airhostessinstitute.com/thank-you/");
+        },
+        onError: (error) => {
+          console.error("Lead submission failed:", error);
+          toast({
+            title: "Submission failed",
+            description: "Unable to submit lead payload",
+            variant: "destructive",
+          });
+        },
+      });
     }
   };
 
@@ -286,7 +347,7 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
             inputMode={inputType === "tel" ? "numeric" : undefined}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            disabled={!isInputStep || typing}
+            disabled={!isInputStep || typing || leadSubmitMutation.isPending}
             placeholder={
               isInputStep ? inputPlaceholder : "Choose an option above…"
             }
@@ -296,7 +357,12 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
           />
           <button
             type="submit"
-            disabled={!isInputStep || !input.trim() || typing}
+            disabled={
+              !isInputStep ||
+              !input.trim() ||
+              typing ||
+              leadSubmitMutation.isPending
+            }
             className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-sm sm:rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-glow hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition"
             aria-label="Send"
           >
