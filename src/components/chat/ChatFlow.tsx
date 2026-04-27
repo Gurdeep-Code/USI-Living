@@ -193,7 +193,11 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
       } catch {
         /* ignore */
       }
-      setTimeout(() => window.location.replace("https://airhostessinstitute.com/thank-you/"), 500);    }
+      setTimeout(
+        () => window.location.replace("https://airhostessinstitute.com/thank-you/"),
+        500,
+      );
+    }
   };
 
   const isInputStep = [
