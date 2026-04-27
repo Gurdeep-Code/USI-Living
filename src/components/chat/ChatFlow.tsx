@@ -192,8 +192,7 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
       } catch {
         /* ignore */
       }
-      setTimeout(() => navigate("/thank-you"), 900);
-    }
+      setTimeout(() => window.location.replace("https://airhostessinstitute.com/thank-you/"), 900);    }
   };
 
   const isInputStep = [

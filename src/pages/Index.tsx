@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { ChatFlow } from "@/components/chat/ChatFlow";
+import logoFull from "@/assets/logo_full.webp";
 
 const Index = () => {
   const [resetKey, setResetKey] = useState(0);
@@ -16,24 +17,11 @@ const Index = () => {
       <header className="shrink-0 z-30 bg-background/95 backdrop-blur border-b border-border">
         <div className="max-w-5xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-            <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl flex items-center justify-center text-primary-foreground shadow-bubble shrink-0 overflow-hidden">
-              <img
-                src="./src/assets/tritya_logo.png"
-                alt="Tritya Aviation Academy"
-                className="h-10 w-10 sm:h-11 sm:w-11 object-contain drop-shadow-sm"
-              />
-            </div>
-            <div className="leading-tight min-w-0">
-              <h1
-                className="font-extrabold text-sm sm:text-lg tracking-tight text-primary truncate"
-                style={{ fontFamily: "'Montserrat', Inter, sans-serif" }}
-              >
-                TRITYA AVIATION
-              </h1>
-              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wider truncate">
-                Air Hostess & Aviation Academy
-              </p>
-            </div>
+            <img
+              src={logoFull}
+              alt="Tritya Aviation Academy"
+              className="w-52 object-contain drop-shadow-sm"
+            />
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
