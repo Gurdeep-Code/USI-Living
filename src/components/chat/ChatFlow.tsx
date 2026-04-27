@@ -183,6 +183,7 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
     } else if (step === "askPincode") {
       const finalLead = { ...lead, pincode: val };
       setLead(finalLead);
+      console.log("Final lead submission:", finalLead);
       await botSequence([
         <>🎉 Thanks for sharing your details! Redirecting…</>,
       ]);
@@ -192,7 +193,7 @@ export const ChatFlow = ({ resetKey }: ChatFlowProps) => {
       } catch {
         /* ignore */
       }
-      setTimeout(() => window.location.replace("https://airhostessinstitute.com/thank-you/"), 900);    }
+      setTimeout(() => window.location.replace("https://airhostessinstitute.com/thank-you/"), 500);    }
   };
 
   const isInputStep = [
