@@ -21,7 +21,7 @@ const Index = () => {
             <img
               src={logoFull}
               alt="Tritya Aviation Academy"
-              className="w-52 object-contain drop-shadow-sm"
+              className="w-32 sm:w-36 md:w-52 object-contain drop-shadow-sm"
             />
           </div>
 
