@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/modular-kitchen-wardrobe-chat", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/modular-kitchen-wardrobe-chat/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/modular-kitchen-wardrobe-chat/:path*", "destination": "/index.html" }
+  ]
+}
