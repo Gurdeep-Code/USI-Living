@@ -4,7 +4,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(() => ({
-  base: "/admission-chat/",
+  base: "/modular-kitchen-wardrobe-chat/",
   server: {
     host: "::",
     port: 3000,

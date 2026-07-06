@@ -25,7 +25,7 @@ export const OptionButtons = ({ options, onSelect, highlightLast }: OptionButton
           className={cn(
             "px-3 py-2 sm:px-4 sm:py-2.5 rounded-sm sm:rounded-md text-xs sm:text-sm font-semibold transition-colors shadow-bubble",
             isAccent
-              ? "bg-accent text-accent-foreground hover:bg-accent/90"
+              ? "bg-primary text-accent-foreground hover:bg-primary/90"
               : "bg-primary text-primary-foreground hover:bg-primary/90"
           )}
         >

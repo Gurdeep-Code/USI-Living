@@ -14,12 +14,13 @@ type Msg =
 type Step =
   | "intro"
   | "q1"
+  | "budget"
   | "q2"
   | "q3"
   | "askPhone"
   | "askName"
   | "askEmail"
-  | "askPincode"
+  | "askCity"
   | "done";
 
 const TYPING_DELAY = 800;
@@ -74,8 +75,9 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
     name: leadData.name ?? "",
     phone: leadData.phone ?? "",
     email: leadData.email ?? "",
-    pincode: leadData.pincode ?? "",
+    city: leadData.city ?? "",
     course: leadData.course ?? "",
+    budget: leadData.budget ?? "",
     interest: leadData.interest ?? "",
     contactPref: leadData.contactPref ?? "",
     page_url: window.location.href,
@@ -121,24 +123,30 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
       void (async () => {
         await botSequence([
           <>
-            Welcome to <strong>Tritya Air Hostess & Aviation Academy</strong>,
-            where we provide professional aviation courses and training programs
-            with placement assistance.
+            Welcome to <strong>USI Living</strong>! Create the Home You've
+            Always Dreamed Of! Premium modular kitchens, wardrobes, and
+            customized interiors designed for your lifestyle. Enjoy expert
+            consultation, superior craftsmanship, and installation in just 15
+            days. Fill in your details to get a free design consultation
+            today!
           </>,
           <>
-            <span className="font-semibold text-secondary">
-              Zero Cost EMI Available
+            <span className="font-semibold text-primary">
+              German-Engineered Precision
             </span>
             {" | "}
             <span className="font-semibold text-primary">
-              IGI Airport Training
+              Up to 10 Years Warranty*
             </span>
             {" | "}
-            <span className="font-semibold text-accent">
-              Scholarship Available*
+            <span className="font-semibold text-primary">
+              Free 3D Design Draft
             </span>
           </>,
-          <>Which course are you looking for?</>,
+          <>
+            We are here to enhance and customize your experience. Kindly
+            select the service
+          </>,
         ]);
         if (runIdRef.current === myRun) setStep("q1");
       })();
@@ -160,7 +168,11 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
     pushUser(value);
     if (step === "q1") {
       setLead((l) => ({ ...l, course: value }));
-      await botSequence([<>Great! You are here for:</>]);
+      await botSequence([<>What is your budget?</>]);
+      setStep("budget");
+    } else if (step === "budget") {
+      setLead((l) => ({ ...l, budget: value }));
+      await botSequence([<>You are here for</>]);
       setStep("q2");
     } else if (step === "q2") {
       setLead((l) => ({ ...l, interest: value }));
@@ -186,8 +198,9 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
       if (!/^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/.test(val.trim()))
         return "Enter a valid email";
     }
-    if (step === "askPincode") {
-      if (!/^\d{6}$/.test(val.trim())) return "Enter a valid 6-digit pincode";
+    if (step === "askCity") {
+      if (val.trim().length < 2 || val.trim().length > 60)
+        return "Enter your city";
     }
     return null;
   };
@@ -228,10 +241,10 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
       setStep("askEmail");
     } else if (step === "askEmail") {
       setLead((l) => ({ ...l, email: val }));
-      await botSequence([<>And finally, your Pincode?</>]);
-      setStep("askPincode");
-    } else if (step === "askPincode") {
-      const finalLead: Record<string, string> = { ...lead, pincode: val };
+      await botSequence([<>Your City?</>]);
+      setStep("askCity");
+    } else if (step === "askCity") {
+      const finalLead: Record<string, string> = { ...lead, city: val };
       setLead(finalLead);
       await botSequence([
         <>🎉 Thanks for sharing your details! Redirecting…</>,
@@ -247,7 +260,7 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
             title: "Submitted successfully",
             description: "Your details have been saved.",
           });
-          window.location.replace("https://airhostessinstitute.com/thank-you/");
+          window.location.replace(`${window.location.origin}/modular-kitchen-wardrobe-chat/thank-you/`);
         },
         onError: (error) => {
           console.error("Lead submission failed:", error);
@@ -265,7 +278,7 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
     "askPhone",
     "askName",
     "askEmail",
-    "askPincode",
+    "askCity",
   ].includes(step);
 
   const inputPlaceholder =
@@ -273,12 +286,12 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
       askPhone: "10-digit mobile number",
       askName: "Your full name",
       askEmail: "you@example.com",
-      askPincode: "6-digit pincode",
-    }[step as "askPhone" | "askName" | "askEmail" | "askPincode"] ??
+      askCity: "Your city",
+    }[step as "askPhone" | "askName" | "askEmail" | "askCity"] ??
     "Type your message…";
 
   const inputType =
-    step === "askPhone" || step === "askPincode"
+    step === "askPhone"
       ? "tel"
       : step === "askEmail"
         ? "email"
@@ -302,12 +315,18 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
               <OptionButtons
                 key="opts-q1"
                 options={[
-                  "Air Hostess",
-                  "Cabin Crew",
-                  "Aviation",
-                  "Ground Staff",
-                  "Ticketing",
+                  "Modular Kitchen",
+                  "Modular Wardrobe",
+                  "Both (Modular Kitchen & Wardrobe)",
+                  "Others",
                 ]}
+                onSelect={handleOption}
+              />
+            )}
+            {!typing && step === "budget" && (
+              <OptionButtons
+                key="opts-budget"
+                options={["7-10 Lakhs", "10-15 Lakhs", "More than 15 Lakhs"]}
                 onSelect={handleOption}
               />
             )}
@@ -315,9 +334,9 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
               <OptionButtons
                 key="opts-q2"
                 options={[
-                  "Fees Details",
-                  "About Tritya",
-                  "Scholarship",
+                  "Quote",
+                  "About us",
+                  "Free Design Consultation",
                   "All of the above",
                 ]}
                 onSelect={handleOption}
@@ -351,7 +370,7 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
             placeholder={
               isInputStep ? inputPlaceholder : "Choose an option above…"
             }
-            className="flex-1 min-w-0 bg-muted/50 border border-border rounded-sm sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-[13px] sm:text-[15px] outline-none focus:ring-2 focus:ring-accent/60 focus:border-accent disabled:opacity-100 disabled:cursor-not-allowed placeholder:text-foreground/70 disabled:placeholder:text-foreground/80 transition"
+            className="flex-1 min-w-0 bg-muted/50 border border-border rounded-sm sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-[13px] sm:text-[15px] outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary disabled:opacity-100 disabled:cursor-not-allowed placeholder:text-foreground/70 disabled:placeholder:text-foreground/80 transition"
             maxLength={step === "askEmail" ? 120 : 80}
             autoFocus={isInputStep}
           />
@@ -363,7 +382,7 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
               typing ||
               leadSubmitMutation.isPending
             }
-            className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-sm sm:rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-glow hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-sm sm:rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-glow hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition"
             aria-label="Send"
           >
             <Send className="h-4 w-4 sm:h-5 sm:w-5" />

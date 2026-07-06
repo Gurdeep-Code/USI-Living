@@ -4,15 +4,15 @@
 
 [[redirects]]
   from = "/"
-  to = "/admission-chat"
+  to = "/modular-kitchen-wardrobe-chat"
   status = 301
 
 [[redirects]]
-  from = "/admission-chat/assets/*"
+  from = "/modular-kitchen-wardrobe-chat/assets/*"
   to = "/assets/:splat"
   status = 200
 
 [[redirects]]
-  from = "/admission-chat/*"
+  from = "/modular-kitchen-wardrobe-chat/*"
   to = "/index.html"
   status = 200

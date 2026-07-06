@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CheckCircle2, Plane, Phone, MessageCircle } from "lucide-react";
+import { House, Phone } from "lucide-react";
+import logoSmall from "@/assets/logo_full.svg";
 
 const ThankYou = () => {
   return (
@@ -11,39 +12,45 @@ const ThankYou = () => {
         transition={{ type: "spring", stiffness: 220, damping: 22 }}
         className="max-w-xl w-full bg-card rounded-3xl shadow-bubble border border-border/50 p-8 sm:p-12 text-center"
       >
-        <div className="mx-auto h-20 w-20 rounded-full bg-gradient-header flex items-center justify-center text-primary-foreground shadow-glow mb-6">
-          <CheckCircle2 className="h-10 w-10" />
+        <div className="mx-auto h-20 w-20 rounded-full flex items-center justify-center text-primary-foreground shadow-glow mb-6">
+         <img src={logoSmall} alt="USI Living" className="w-12" />
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-primary mb-3" style={{ fontFamily: "'Montserrat', Inter, sans-serif" }}>
-          Thank You! ✈️
+        <h1
+          className="text-3xl sm:text-4xl font-extrabold text-primary mb-3"
+          style={{ fontFamily: "'Montserrat', Inter, sans-serif" }}
+        >
+          Thank You!
         </h1>
-        <p className="text-muted-foreground text-base sm:text-lg mb-8">
-          Your details have been received. A counsellor from <span className="font-semibold text-secondary">Tritya Aviation Academy</span> will reach out to you shortly with course information, fees, and scholarship details.
+        <p className="text-muted-foreground text-base sm:text-lg mb-3">
+          Your details have been received. A Representative
+          will reach out to you shortly.
         </p>
-
+         <p className="text-muted-foreground text-base sm:text-md mb-6 font-semibold">
+         In case of urgency, kindly call on below numbers.
+        </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <a
-            href="tel:+919999999999"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition shadow-bubble"
+            href="tel:+919999202250"
+            className="text-xs inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition shadow-bubble"
           >
-            <Phone className="h-4 w-4" /> Call Us
+            <Phone className="h-3 w-3" /> 9999202250
           </a>
           <a
-            href="https://wa.me/919999999999"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-secondary text-secondary-foreground font-semibold hover:bg-secondary/90 transition shadow-bubble"
+            href="tel:+919999963162"
+            className="text-xs inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition shadow-bubble"
           >
-            <MessageCircle className="h-4 w-4" /> WhatsApp
+            <Phone className="h-3 w-3" /> 9999963162
           </a>
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-accent/90 transition shadow-glow"
-          >
-            <Plane className="h-4 w-4" /> Start Over
-          </Link>
         </div>
+        <Link
+            replace={true}
+            to="https://usiliving.com/"
+            className="w-[30%] mt-4 inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full text-accent-foreground font-semibold hover:bg-primary/90 transition shadow-glow bg-primary"
+          >
+            <House className="w-4" />
+            Home
+          </Link>
       </motion.div>
     </div>
   );
