@@ -13,6 +13,31 @@
   status = 200
 
 [[redirects]]
+  from = "/modular-kitchen-wardrobe-chat/favicon.ico"
+  to = "/favicon.ico"
+  status = 200
+
+[[redirects]]
+  from = "/modular-kitchen-wardrobe-chat/apple-touch-icon.png"
+  to = "/apple-touch-icon.png"
+  status = 200
+
+[[redirects]]
+  from = "/modular-kitchen-wardrobe-chat/android-chrome-192x192.png"
+  to = "/android-chrome-192x192.png"
+  status = 200
+
+[[redirects]]
+  from = "/modular-kitchen-wardrobe-chat/android-chrome-512x512.png"
+  to = "/android-chrome-512x512.png"
+  status = 200
+
+[[redirects]]
+  from = "/modular-kitchen-wardrobe-chat/site.webmanifest"
+  to = "/site.webmanifest"
+  status = 200
+
+[[redirects]]
   from = "/modular-kitchen-wardrobe-chat/*"
   to = "/index.html"
   status = 200
