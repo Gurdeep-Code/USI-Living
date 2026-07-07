@@ -335,6 +335,7 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
                 key="opts-q2"
                 options={[
                   "Quote",
+                  "Previous Work",
                   "About us",
                   "Free Design Consultation",
                   "All of the above",
