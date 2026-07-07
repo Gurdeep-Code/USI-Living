@@ -260,7 +260,7 @@ export const ChatFlow = ({ resetKey, onSubmittingChange }: ChatFlowProps) => {
             title: "Submitted successfully",
             description: "Your details have been saved.",
           });
-          window.location.href = `${window.location.origin}/modular-kitchen-wardrobe-chat/thank-you/`;
+          window.location.href = `${window.location.origin}/modular-kitchen-wardrobe-chat/thank-you`;
         },
         onError: (error) => {
           console.error("Lead submission failed:", error);
