@@ -46,10 +46,10 @@ const ThankYou = () => {
         <Link
             replace={true}
             to="https://usiliving.com/"
-            className="w-[30%] mt-4 inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full text-accent-foreground font-semibold hover:bg-primary/90 transition shadow-glow bg-primary"
+            className="text-xs w-[30%] mt-4 inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full text-accent-foreground font-semibold hover:bg-primary/90 transition shadow-glow bg-primary"
           >
-            <House className="w-4" />
-            Home
+            <House className="w-3.5" />
+            View Website
           </Link>
       </motion.div>
     </div>
